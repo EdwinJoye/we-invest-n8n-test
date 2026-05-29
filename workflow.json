@@ -9,90 +9,24 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [
-        0,
-        0
-      ],
+      "position": [0, 0],
       "id": "145aff94-6c87-40ab-b72d-699b6fcd6fed",
       "name": "Webhook",
       "webhookId": "a7835280-ca49-4651-b94d-2e063513f980"
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst body = $input.first().json.body;\n\nconst requiredFields = ['firstName', 'email', 'projectType', 'city'];\nconst missingFields = requiredFields.filter(field => !body[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Champs manquants : ${missingFields.join(', ')}`);\n}\n\nreturn [{ json: body }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        208,
-        0
-      ],
-      "id": "015db141-bc94-4ce2-ab4e-aaa726d53fde",
-      "name": "Validation des données"
-    },
-    {
-      "parameters": {
-        "jsCode": "const body = $input.first().json;\n\nconst leadId = 'lead_' + Date.now();\nconst receivedAt = new Date().toISOString();\nconst priority = body.projectType === 'seller' || body.budget > 400000 ? 'high' : 'normal';\nconst summary = `${body.firstName} ${body.lastName} est un lead ${body.projectType} à ${body.city} avec un budget de ${body.budget} €.`;\n\nreturn [{\n  json: {\n    ...body,\n    leadId,\n    receivedAt,\n    priority,\n    summary\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        416,
-        0
-      ],
-      "id": "66f9baa0-44b1-4e17-87a2-d9b3bfb813df",
-      "name": "Enrichissement des données"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "0d3b8aa0-43da-4cee-be02-d8941fab9f62",
-              "leftValue": "={{ $json.priority }}",
-              "rightValue": "high",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        624,
-        0
-      ],
-      "id": "48c068f4-8c57-4fc1-946f-a1ed3b65e6d9",
-      "name": "Condition priorité"
-    },
-    {
-      "parameters": {
         "fromEmail": "edwinmuchita@gmail.com",
         "toEmail": "edwinjoye@gmail.com",
         "subject": "Hello there !",
-        "html": "=<h2>Hello there !</h2>\n<p>Le flux n8n a bien été exécuté.</p>\n<h3>Résumé du lead reçu :</h3>\n<ul>\n  <li><strong>Nom :</strong> {{ $json.firstName }} {{ $json.lastName }}</li>\n  <li><strong>Email :</strong> {{ $json.email }}</li>\n  <li><strong>Ville :</strong> {{ $json.city }}</li>\n  <li><strong>Type de projet :</strong> {{ $json.projectType }}</li>\n  <li><strong>Budget :</strong> {{ $json.budget }} €</li>\n  <li><strong>Priorité :</strong> {{ $json.priority }}</li>\n  <li><strong>Source :</strong> {{ $json.source }}</li>\n  <li><strong>Date de réception :</strong> {{ $json.receivedAt }}</li>\n  <li><strong>ID du lead :</strong> {{ $json.leadId }}</li>\n</ul>\n<p><strong>Statut :</strong> Lead prioritaire détecté.</p>\n<p><em>Ce message a été généré automatiquement depuis un workflow n8n exécuté en local.</em></p>",
+        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;\">\n  <div style=\"background: #1a1a2e; padding: 24px; text-align: center;\">\n    <img src=\"https://6383ed181c2e9c476e6ec321784a3311.cdn.bubble.io/cdn-cgi/image/w=192,h=50,f=auto,dpr=2.5,fit=contain/f1715102476722x596837710462892800/5c7ec3ce82e1969f93d7b34634f99cbe.png\" alt=\"We Invest\" style=\"height: 50px;\" />\n  </div>\n  <div style=\"padding: 32px; text-align: center;\">\n    <h2 style=\"color: #1a1a2e; margin-top: 0;\">Nouveau lead reçu</h2>\n    <p style=\"color: #555555;\">Bonjour, un nouveau lead vient d'être enregistré via le formulaire en ligne. Voici le récapitulatif des informations reçues :</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin: 24px 0; text-align: left;\">\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333; width: 40%;\">Nom</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.firstName }} {{ $json.lastName }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Email</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.email }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Ville</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.city }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Type de projet</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.projectType }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Budget</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.budget }} €</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Source</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.source }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Date de réception</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.receivedAt }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">ID du lead</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.leadId }}</td>\n      </tr>\n    </table>\n    <div style=\"background: #ffebee; border: 2px solid #c62828; padding: 16px; border-radius: 4px; text-align: center;\">\n      <p style=\"margin: 0; color: #c62828; font-weight: bold;\">🔴 Lead prioritaire détecté</p>\n      <p style=\"margin: 8px 0 0 0; color: #555; font-size: 14px;\">Ce lead requiert une prise en charge rapide.</p>\n    </div>\n  </div>\n  <div style=\"background: #f0f0f0; padding: 16px; text-align: center;\">\n    <p style=\"margin: 0; color: #aaaaaa; font-size: 12px;\">Ce message a été généré automatiquement depuis un workflow n8n exécuté en local.</p>\n  </div>\n</div>",
         "options": {}
       },
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [
-        832,
-        -96
-      ],
+      "position": [832, -160],
       "id": "d5643667-0aed-4c9b-889f-b26739686220",
-      "name": "Email - Lead prioritaire",
+      "name": "Email - High Priority Lead",
       "webhookId": "05f60f4e-73a4-413d-80b9-6a96965a9423",
       "credentials": {
         "smtp": {
@@ -106,17 +40,35 @@
         "fromEmail": "edwinmuchita@gmail.com",
         "toEmail": "edwinjoye@gmail.com",
         "subject": "Hello there !",
-        "html": "=<h2>Hello there !</h2>\n<p>Le flux n8n a bien été exécuté.</p>\n<h3>Résumé du lead reçu :</h3>\n<ul>\n  <li><strong>Nom :</strong> {{ $json.firstName }} {{ $json.lastName }}</li>\n  <li><strong>Email :</strong> {{ $json.email }}</li>\n  <li><strong>Ville :</strong> {{ $json.city }}</li>\n  <li><strong>Type de projet :</strong> {{ $json.projectType }}</li>\n  <li><strong>Budget :</strong> {{ $json.budget }} €</li>\n  <li><strong>Priorité :</strong> {{ $json.priority }}</li>\n  <li><strong>Source :</strong> {{ $json.source }}</li>\n  <li><strong>Date de réception :</strong> {{ $json.receivedAt }}</li>\n  <li><strong>ID du lead :</strong> {{ $json.leadId }}</li>\n</ul>\n<p><strong>Statut :</strong> Lead standard détecté.</p>\n<p><em>Ce message a été généré automatiquement depuis un workflow n8n exécuté en local.</em></p>",
+        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;\">\n  <div style=\"background: #1a1a2e; padding: 24px; text-align: center;\">\n    <img src=\"https://6383ed181c2e9c476e6ec321784a3311.cdn.bubble.io/cdn-cgi/image/w=192,h=50,f=auto,dpr=2.5,fit=contain/f1715102476722x596837710462892800/5c7ec3ce82e1969f93d7b34634f99cbe.png\" alt=\"We Invest\" style=\"height: 50px;\" />\n  </div>\n  <div style=\"padding: 32px; text-align: center;\">\n    <h2 style=\"color: #1a1a2e; margin-top: 0;\">Nouveau lead reçu</h2>\n    <p style=\"color: #555555;\">Bonjour, un nouveau lead vient d'être enregistré via le formulaire en ligne. Voici le récapitulatif des informations reçues :</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin: 24px 0; text-align: left;\">\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333; width: 40%;\">Nom</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.firstName }} {{ $json.lastName }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Email</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.email }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Ville</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.city }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Type de projet</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.projectType }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Budget</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.budget }} €</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Source</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.source }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Date de réception</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.receivedAt }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">ID du lead</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.leadId }}</td>\n      </tr>\n    </table>\n    <div style=\"background: #fff3e0; border: 2px solid #e65100; padding: 16px; border-radius: 4px; text-align: center;\">\n      <p style=\"margin: 0; color: #e65100; font-weight: bold;\">🟠 Lead intermédiaire détecté</p>\n      <p style=\"margin: 8px 0 0 0; color: #555; font-size: 14px;\">Ce lead mérite une attention particulière.</p>\n    </div>\n  </div>\n  <div style=\"background: #f0f0f0; padding: 16px; text-align: center;\">\n    <p style=\"margin: 0; color: #aaaaaa; font-size: 12px;\">Ce message a été généré automatiquement depuis un workflow n8n exécuté en local.</p>\n  </div>\n</div>",
         "options": {}
       },
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [
-        832,
-        96
-      ],
+      "position": [832, 16],
+      "id": "69797e00-f0ef-4dae-a4e4-3de8e1e1010b",
+      "name": "Email - Medium Priority Lead",
+      "webhookId": "ba571dae-deaa-4b84-8e4e-9029796da27a",
+      "credentials": {
+        "smtp": {
+          "id": "lwoGOiWJVK4tqZ1r",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "edwinmuchita@gmail.com",
+        "toEmail": "edwinjoye@gmail.com",
+        "subject": "Hello there !",
+        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;\">\n  <div style=\"background: #1a1a2e; padding: 24px; text-align: center;\">\n    <img src=\"https://6383ed181c2e9c476e6ec321784a3311.cdn.bubble.io/cdn-cgi/image/w=192,h=50,f=auto,dpr=2.5,fit=contain/f1715102476722x596837710462892800/5c7ec3ce82e1969f93d7b34634f99cbe.png\" alt=\"We Invest\" style=\"height: 50px;\" />\n  </div>\n  <div style=\"padding: 32px; text-align: center;\">\n    <h2 style=\"color: #1a1a2e; margin-top: 0;\">Nouveau lead reçu</h2>\n    <p style=\"color: #555555;\">Bonjour, un nouveau lead vient d'être enregistré via le formulaire en ligne. Voici le récapitulatif des informations reçues :</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin: 24px 0; text-align: left;\">\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333; width: 40%;\">Nom</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.firstName }} {{ $json.lastName }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Email</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.email }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Ville</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.city }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Type de projet</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.projectType }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Budget</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.budget }} €</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Source</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.source }}</td>\n      </tr>\n      <tr style=\"background: #f7f7f7;\">\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">Date de réception</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.receivedAt }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px 14px; font-weight: bold; color: #333;\">ID du lead</td>\n        <td style=\"padding: 10px 14px; color: #555;\">{{ $json.leadId }}</td>\n      </tr>\n    </table>\n    <div style=\"background: #e3f2fd; border: 2px solid #1565c0; padding: 16px; border-radius: 4px; text-align: center;\">\n      <p style=\"margin: 0; color: #1565c0; font-weight: bold;\">🔵 Lead standard détecté</p>\n      <p style=\"margin: 8px 0 0 0; color: #555; font-size: 14px;\">Ce lead peut être traité selon le flux standard.</p>\n    </div>\n  </div>\n  <div style=\"background: #f0f0f0; padding: 16px; text-align: center;\">\n    <p style=\"margin: 0; color: #aaaaaa; font-size: 12px;\">Ce message a été généré automatiquement depuis un workflow n8n exécuté en local.</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [832, 208],
       "id": "ff347078-abf2-4486-a136-cd4b0f05d4b1",
-      "name": "Email - Lead standard",
+      "name": "Email - Standard Priority Lead",
       "webhookId": "dbdb6d39-4783-4d2a-8512-1fcc27463dad",
       "credentials": {
         "smtp": {
@@ -124,6 +76,114 @@
           "name": "SMTP account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst body = $input.first().json.body;\n\nconst requiredFields = ['firstName', 'email', 'projectType', 'city'];\nconst missingFields = requiredFields.filter(field => !body[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Champs manquants : ${missingFields.join(', ')}`);\n}\n\nreturn [{ json: body }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [208, 0],
+      "id": "015db141-bc94-4ce2-ab4e-aaa726d53fde",
+      "name": "Data Validation"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\n\nconst leadId = 'lead_' + Date.now();\nconst receivedAt = new Date().toISOString();\nconst priority = \n  body.projectType === 'seller' && body.budget > 400000 ? 'high' :\n  body.projectType === 'seller' && body.budget <= 400000 ? 'medium' :\n  body.projectType === 'buyer' && body.budget > 400000 ? 'medium' :\n  'normal';\nconst summary = `${body.firstName} ${body.lastName} est un lead ${body.projectType} à ${body.city} avec un budget de ${body.budget} €.`;\n\nreturn [{\n  json: {\n    ...body,\n    leadId,\n    receivedAt,\n    priority,\n    summary\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [416, 0],
+      "id": "66f9baa0-44b1-4e17-87a2-d9b3bfb813df",
+      "name": "Data Enrichment"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.priority }}",
+                    "rightValue": "high",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8966aac6-0429-416a-a57f-eaab1c3d0795"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "high"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ebe10909-0a7e-4ac2-8e1a-4047be000a00",
+                    "leftValue": "={{ $json.priority }}",
+                    "rightValue": "medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "medium"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cc436fb2-78ec-40eb-ad17-f1611b5ff1fd",
+                    "leftValue": "={{ $json.priority }}",
+                    "rightValue": "normal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "normal"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [624, 0],
+      "id": "b435b0ea-54c6-4835-bb96-86408e097cf6",
+      "name": "Priority Switch"
     }
   ],
   "pinData": {},
@@ -132,47 +192,54 @@
       "main": [
         [
           {
-            "node": "Validation des données",
+            "node": "Data Validation",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Validation des données": {
+    "Data Validation": {
       "main": [
         [
           {
-            "node": "Enrichissement des données",
+            "node": "Data Enrichment",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Enrichissement des données": {
+    "Data Enrichment": {
       "main": [
         [
           {
-            "node": "Condition priorité",
+            "node": "Priority Switch",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Condition priorité": {
+    "Priority Switch": {
       "main": [
         [
           {
-            "node": "Email - Lead prioritaire",
+            "node": "Email - High Priority Lead",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Email - Lead standard",
+            "node": "Email - Medium Priority Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email - Standard Priority Lead",
             "type": "main",
             "index": 0
           }
@@ -185,7 +252,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "0d491869-c876-4a57-ae9a-027a05289668",
+  "versionId": "54721c7c-b868-4064-841f-da98d8c33e40",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "314f7b7da6d2711e91542353f7eead9ce9205eaef7b29882e621898ab999955b"
