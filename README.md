@@ -40,7 +40,18 @@ curl -X POST http://localhost:5678/webhook/lead-intake \
 ## Workflow structure
 
 - **Webhook** — receive the lead via POST
-- **Data validation** — check required fields
-- **Data enrichment** — add leadId, date, priority, summary
-- **Priority condition** — branch based on priority
-- **Email lead prioritaire / Email lead standard** — send the final email
+- **Data Validation** — check required fields (firstName, email, projectType, city)
+- **Data Enrichment** — add leadId, receivedAt, priority, summary
+- **Priority Switch** — route the lead based on priority level
+- **Email - High Priority Lead** — seller with budget > 400k
+- **Email - Medium Priority Lead** — seller with budget ≤ 400k, or buyer with budget > 400k
+- **Email - Standard Lead** — buyer with budget ≤ 400k
+
+## Priority logic
+
+| projectType | budget      | priority |
+| ----------- | ----------- | -------- |
+| seller      | > 400 000 € | high     |
+| seller      | ≤ 400 000 € | medium   |
+| buyer       | > 400 000 € | medium   |
+| buyer       | ≤ 400 000 € | normal   |
